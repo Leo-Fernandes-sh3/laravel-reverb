@@ -1,0 +1,3 @@
+extend type Mutation {
+    hello(nome: String!): String @field(resolver: "App\\GraphQL\\Mutations\\Hello")
+}

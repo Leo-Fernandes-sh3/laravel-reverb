@@ -4,9 +4,6 @@ namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -23,6 +20,17 @@ class EnviarHorarioServidor implements ShouldBroadcastNow
         $this->msg = $msg;
     }
 
+    /**
+     * Define o nome customizado do evento no canal de broadcast.
+     *
+     * Este nome será usado pelo frontend (Laravel Echo) ao escutar o evento.
+     *
+     * Exemplo de escuta no frontend:
+     * Echo.channel('nome-do-canal')
+     *     .listen('.horario', (e) => { ... });
+     *
+     * @return string
+     */
     public function broadcastAs(): string
     {
         return 'horario';

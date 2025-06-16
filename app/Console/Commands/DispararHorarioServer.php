@@ -3,11 +3,23 @@
 namespace App\Console\Commands;
 
 use App\Events\EnviarHorarioServidor;
-use App\Events\Hello;
 use Illuminate\Console\Command;
 
+/**
+ * Class DispararHorarioServer
+ *
+ * Comando Artisan responsável por disparar o evento EnviarHorarioServidor,
+ * enviando o horário atual do servidor para o frontend via Laravel Reverb.
+ *
+ * Este comando pode ser agendado no Laravel Schedule para execução periódica,
+ * permitindo que o frontend receba o horário do servidor em tempo real.
+ *
+ * Exemplo de execução manual:
+ * php artisan app:disparar-horario-server
+ */
 class DispararHorarioServer extends Command
 {
+    private const FORMAT_DATE = 'H:i:s';
     /**
      * The name and signature of the console command.
      *
@@ -20,17 +32,15 @@ class DispararHorarioServer extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Dispara o horário atual do servidor via evento EnviarHorarioServidor (Laravel Reverb)';
 
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
-        EnviarHorarioServidor::dispatch(Date('H:i:s'));
-    }
+        $horario = date(self::FORMAT_DATE);
 
-    public function broadcastAs(): string{
-        return 'horario';
+        EnviarHorarioServidor::dispatch($horario);
     }
 }

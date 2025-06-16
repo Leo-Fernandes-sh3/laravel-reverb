@@ -1,0 +1,20 @@
+extend type Mutation {
+    """
+    Mutation responsável por disparar uma mensagem de chat existente para os clientes conectados via WebSocket (Laravel Reverb).
+    Esta mutation apenas realiza o broadcast da mensagem, não realiza persistência em banco.
+    """
+    dispararMensagemChat(
+        input: MensagemChatInput! @spread
+    ): Boolean @field(resolver: "App\\GraphQL\\Mutations\\DispararMensagemChat")
+}
+
+"""
+Estrutura da mensagem de chat que será disparada no broadcast.
+"""
+input MensagemChatInput {
+    idComentario: Int! @rules(apply: ["required", "integer"])
+    id: Int! @rules(apply: ["required", "integer"])
+    filtro: String! @rules(apply: ["required", "string"])
+    mensagem: String! @rules(apply: ["required", "string"])
+    tipo: String! @rules(apply: ["required", "string"])
+}

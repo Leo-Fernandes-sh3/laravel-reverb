@@ -23,6 +23,11 @@ class EnviarHorarioServidor implements ShouldBroadcastNow
         $this->msg = $msg;
     }
 
+    public function broadcastAs(): string
+    {
+        return 'horario';
+    }
+
     /**
      * Get the channels the event should broadcast on.
      *

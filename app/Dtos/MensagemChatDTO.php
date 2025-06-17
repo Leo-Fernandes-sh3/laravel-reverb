@@ -6,9 +6,9 @@ class MensagemChatDTO
 {
     public string $msg;
     public string $filtro;
-    public int $id;
+    public string $id;
     public string $tipo;
-    public int $idComentario;
+    public string $idComentario;
 
     /**
      * Construtor que inicializa o DTO a partir de um array associativo de argumentos.
@@ -20,10 +20,10 @@ class MensagemChatDTO
      */
     public function __construct(array $args)
     {
-        $this->msg = $args['msg'] ?? '';
+        $this->msg = $args['mensagem'] ?? '';
         $this->filtro = $args['filtro'] ?? '';
-        $this->id = isset($args['id']) ? (int) $args['id'] : 0;
+        $this->id = isset($args['id']) ? (int) $args['id'] : '0';
         $this->tipo = $args['tipo'] ?? '';
-        $this->idComentario = isset($args['idComentario']) ? (int) $args['idComentario'] : 0;
+        $this->idComentario = isset($args['idComentario']) ? (int) $args['idComentario'] : '0';
     }
 }

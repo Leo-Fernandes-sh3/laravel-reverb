@@ -12,8 +12,8 @@ extend type Mutation {
 Estrutura da mensagem de chat que será disparada no broadcast.
 """
 input MensagemChatInput {
-    idComentario: Int! @rules(apply: ["required", "integer"])
-    id: Int! @rules(apply: ["required", "integer"])
+    idComentario: String! @rules(apply: ["required", "string"])
+    id: String! @rules(apply: ["required", "string"])
     filtro: String! @rules(apply: ["required", "string"])
     mensagem: String! @rules(apply: ["required", "string"])
     tipo: String! @rules(apply: ["required", "string"])

@@ -15,6 +15,7 @@ input MensagemChatInput {
     idComentario: String! @rules(apply: ["required", "string"])
     id: String! @rules(apply: ["required", "string"])
     filtro: String! @rules(apply: ["required", "string"])
-    mensagem: String! @rules(apply: ["required", "string"])
+    msg: String! @rules(apply: ["required", "string"])
     tipo: String! @rules(apply: ["required", "string"])
+    idTipoConta: String 
 }

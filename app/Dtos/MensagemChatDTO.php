@@ -20,7 +20,7 @@ class MensagemChatDTO
      */
     public function __construct(array $args)
     {
-        $this->msg = $args['mensagem'] ?? '';
+        $this->msg = $args['msg'] ?? '';
         $this->filtro = $args['filtro'] ?? '';
         $this->id = isset($args['id']) ? (int) $args['id'] : '0';
         $this->tipo = $args['tipo'] ?? '';

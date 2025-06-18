@@ -1,0 +1,20 @@
+extend type Query {
+    processoItemIniciado(INT_FASE_ITEM: ID! @eq): ProcessoItemIniciado @find
+}
+
+type ProcessoItemIniciado {
+    INT_FASE_ITEM: ID!
+    DH_CALC_FIM: DateTime
+    DH_FIM: DateTime
+    DH_SUSP: DateTime
+    CNPJ_PREF: String
+    INT_PROC: Int
+    STR_LOTE_ITEM_LICI: String
+    ProcessoFase: ProcessoFase
+}
+
+type ProcessoFase {
+    INT_PROC_FASE: ID!
+    INT_FASE_TP: Int
+    H_DUR_PREG: String
+}

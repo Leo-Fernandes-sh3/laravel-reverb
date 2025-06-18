@@ -13,9 +13,9 @@ Estrutura da mensagem de chat que será disparada no broadcast.
 """
 input MensagemChatInput {
     idComentario: String! @rules(apply: ["required", "string"])
-    id: String! @rules(apply: ["required", "string"])
-    filtro: String! @rules(apply: ["required", "string"])
-    msg: String! @rules(apply: ["required", "string"])
-    tipo: String! @rules(apply: ["required", "string"])
-    idTipoConta: String 
+    id: String
+    filtro: String
+    msg: String
+    tipo: String
+    idTipoConta: String
 }

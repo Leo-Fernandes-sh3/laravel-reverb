@@ -1,0 +1,15 @@
+extend type Mutation {
+    """
+    Bloqueia o chat específico, disparando um evento WebSocket via Reverb para os clientes conectados.
+    """
+    executarAcao(
+        input: AcaoInput! @spread
+    ): Boolean @field(resolver: "App\\GraphQL\\Mutations\\ExecutarAcao")
+}
+
+input AcaoInput {
+    idComentario: String! @rules(apply: ["required", "string"])
+    tipo: String
+    data: String
+    acao: String
+}

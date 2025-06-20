@@ -1,0 +1,23 @@
+extend type Query {
+    processoFase(INT_PROC_FASE: ID! @eq): ProcessoFase @find
+}
+
+"""
+Representa uma fase de um processo de licitação.
+"""
+type ProcessoFase {
+    INT_PROC_FASE: Int
+    INT_FASE: Int
+    INT_PROC: Int
+    CNPJ_PREF: String
+    H_DUR_PREG: String
+    H_PROR_SE: String
+    H_DUR_REIN: String
+    H_DUR_REC: String
+    VR_MIN_DIFF_LANC: Float
+    H_REIN_PROR: String
+    H_PROR_FALT: String
+    INT_FASE_TP: Int
+    processo: Processo
+    faseTipo: FaseTipo
+}

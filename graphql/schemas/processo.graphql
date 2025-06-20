@@ -1,0 +1,81 @@
+extend type Query {
+    processo(INT_PROC: ID! @eq): Processo @find
+}
+
+"""
+Representa um processo de licitação.
+"""
+type Processo {
+    NM_CONV_PRG_E: String
+    EXR_CONV_PRG_E: String
+    DESC_STATUS: String
+    D_ABRT_LICI: String
+    INT_PROC: Int
+    H_INI_DPT_PRG_E: String
+    D_FIM_ANLS_PPST_PRG_E: String
+    PROCESSO: String
+    D_ESC_IMP_PRG_E: String
+    D_INI_DPT_PRG_E: String
+    H_FIM_REC_PRG_E: String
+    ML_LICI: String
+    H_ATU_PROC: String
+    INT_QTD_MAX: Int
+    STR_DECR_MUN: String
+    LG_ESPEC_OBR: Boolean
+    DH_PREG_ATV: String
+    SAVE_PAG_JULG: String
+    INT_TP_PRG_E: Int
+    H_INI_REC_PRG_E: String
+    LG_BNF_REG_PRG_E: Boolean
+    VR_MIN_LANC_PRG_E: Float
+    D_HOMOLOG: String
+    CPFCNPJ_CTA: String
+    LG_AUTO: Boolean
+    D_FIM_REC_PRG_E: String
+    DH_FIM_SESSAO: String
+    H_FIM_ANLS_PPST_PRG_E: String
+    D_INI_ANLS_PPST_PRG_E: String
+    INT_TP_HAB: Int
+    STR_CHAV_PROC: String
+    H_INI_ANLS_PPST_PRG_E: String
+    STR_NM_AUT: String
+    INT_TTMT_DFR_PRG_E: Int
+    LG_OCT_CTC: Boolean
+    CNPJ_PREF: String
+    INT_LICI_LEI: Int
+    INT_PROC_STATUS: Int
+    D_INI_REC_PRG_E: String
+    CHAR_ID_EMP: String
+    STR_OBT_LICI: String
+    DH_INI_AUTO: String
+    DESC_LICI: String
+    TLC_LICI: String
+    ID8_CD_LICI: String
+    STR_ADTV_LICI: String
+    STR_PCDM_LICI: String
+    STR_PROC_MAP: String
+    LG_PART_PJ_PF: Boolean
+    DC_SERV_LICI: String
+    CPF_RESPO: String
+    PER_PAGE_JULG: String
+    STR_EDT_LICI: String
+    LG_IGN_REAL: Boolean
+    LG_COMENT: Boolean
+    D_ATU_PROC: String
+    LG_FRAC_BIND: Boolean
+    ID8_LICI: String
+    LG_MARC_OBR: Boolean
+    STR_T_LICI: String
+    LG_SUSP: Boolean
+    INT_NUM_QUA_FECH: Int
+    INT_FASE_TP_LMT_OCT_CTC: Int
+    LG_ANEX_PROP_OBR: Boolean
+    DH_PROC_INI: String
+    NM_RESPO: String
+    STR_T_VED_LICI: String
+    LG_EXC_ME_EPP_PRG_E: Boolean
+    D_PROC_STATUS: String
+    LG_TFRC_VLNT: Boolean
+    processoFase: [ProcessoFase]
+    processoItemIniciado: [ProcessoItemIniciado]
+}

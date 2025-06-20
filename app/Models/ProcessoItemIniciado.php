@@ -3,15 +3,24 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ProcessoItemIniciado extends Model
 {
     protected $table = 'PROCESSO_ITEM_INICIADO';
     protected $primaryKey = 'INT_FASE_ITEM';
 
-    public function processoFase(): HasOne
+    protected $fillable = [
+        'INT_FASE_ITEM',
+        'DH_SUSP'
+    ];
+
+    /**
+     * Funciona
+     * @return BelongsTo
+     */
+    public function processo(): belongsTo
     {
-        return $this->hasOne(ProcessoFase::class, 'INT_FASE', 'INT_FASE');
+        return $this->belongsTo(Processo::class, 'INT_PROC', 'INT_PROC');
     }
 }

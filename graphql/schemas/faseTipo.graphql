@@ -1,0 +1,14 @@
+extend type Query {
+    faseTipo(INT_FASE_TP: ID! @eq): FaseTipo @find
+}
+
+type FaseTipo {
+    INT_FASE_TP: ID!
+    STR_NM_TP: String
+    HEX_COR: String
+    STR_CP: String
+    LG_SORT: String
+    STR_ID_AREA: String
+    INT_SEQ: String
+    processoFase: [ProcessoFase]
+}

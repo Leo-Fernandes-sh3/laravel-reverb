@@ -2,19 +2,23 @@ extend type Query {
     processoItemIniciado(INT_FASE_ITEM: ID! @eq): ProcessoItemIniciado @find
 }
 
+"""
+Representa um item iniciado dentro de um processo de licitação.
+"""
 type ProcessoItemIniciado {
-    INT_FASE_ITEM: ID!
-    DH_CALC_FIM: DateTime
-    DH_FIM: DateTime
-    DH_SUSP: DateTime
-    CNPJ_PREF: String
+    INT_FASE_ITEM: Int
     INT_PROC: Int
+    INT_CTA: Int
+    DH_SUSP: String
+    CNPJ_PREF: String
+    LG_CONFIR: Boolean
+    DH_REIN: String
+    INT_FASE: Int
     STR_LOTE_ITEM_LICI: String
-    ProcessoFase: ProcessoFase
-}
-
-type ProcessoFase {
-    INT_PROC_FASE: ID!
-    INT_FASE_TP: Int
-    H_DUR_PREG: String
+    DH_INI: String
+    DH_CALC_FIM: String
+    DH_FIM_HAB_INI: String
+    DH_FIM: String
+    INT_FASE_ORG: Int
+    processo: Processo
 }

@@ -29,7 +29,7 @@ class AcaoExecutadaEvent implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [
-            new Channel("acao-executada.{$this->acaoDTO->idComentario}"),
+            new Channel("acao-executada.{$this->acaoDTO->id}"),
         ];
     }
 

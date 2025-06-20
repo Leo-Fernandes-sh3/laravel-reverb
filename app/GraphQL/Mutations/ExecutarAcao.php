@@ -11,6 +11,8 @@ final readonly class ExecutarAcao
     {
         $tipo = $args['tipo'];
         if ($tipo === 'monitor') {
+
+            $data = \json_decode($args['data']);
             // TODO criar função executar monitor
         }else {
             $acaoDTO = new AcaoDTO($args);

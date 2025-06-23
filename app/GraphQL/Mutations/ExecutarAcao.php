@@ -19,7 +19,11 @@ final readonly class ExecutarAcao
         $verificar = true;
 
         if ($tipo === 'monitor') {
+            
             $data = \json_decode($args['data']);
+
+            $intFaseItem = (int) $data->INT_FASE_ITEM;
+
             while ($verificar) {
                 $result = $this->getProcessoItemIniciadoCollection($intFaseItem);
 
@@ -27,16 +31,17 @@ final readonly class ExecutarAcao
                     $verificar = false;
                     continue;
                 } else {
-                    if (trim($result->first()->DH_FIM)) {
+                    if ( $result->first()->DH_FIM != null ) {
                         $verificar = false;
                         continue;
                     }
                 }
 
-//                $lgRand = 'N';
-//                $suspensaoGeral = false;
+                $lgRand = 'N';
+                    //                $suspensaoGeral = false;
 
                 if ($result->first()->LG_SUSP === 'S' || $this->isPregoeiroAtivo($result->first())) {
+                    
                     if ($result->first()->DH_SUSP === '') {
 
                         //TODO: atualizar campo DH_SUSP de Processo Item Iniciado com ID $intFaseItem
@@ -70,9 +75,9 @@ final readonly class ExecutarAcao
                         // TODO: informarAcaoPeloServidor('acao', $result->first()->INT_PROC, $info);
                         $verificar = false;
                     }
-                } elseif ($result->first()->LG_SUSP === 'N') {
+                } elseif ($result->first()->LG_SUSP !== 'S') {
                     $mnLicitante = 0;
-                    if ($result->first()->DH_SUSP !== '') {
+                    if ($result->first()->DH_SUSP !== null) {
                         $diferenca = '00:00:00';
                         try {
                             $dataSuspensao = new DateTime($result->first()->DH_SUSP);
@@ -100,9 +105,9 @@ final readonly class ExecutarAcao
 
                             //TODO: atualizar campos abaixo de Processo Item Iniciado com ID $intFaseItem
 
-//                            $processoItemIniciado->INT_FASE_ITEM = $intFaseItem;
-//                            $processoItemIniciado->DH_CALC_FIM = $date->format('Y-m-d H:i:s');
-//                            $processoItemIniciado->DH_SUSP = '';
+                            // $processoItemIniciado->INT_FASE_ITEM = $intFaseItem;
+                            // $processoItemIniciado->DH_CALC_FIM = $date->format('Y-m-d H:i:s');
+                            // $processoItemIniciado->DH_SUSP = '';
 
                         } catch (Exception $e) {
                             //TODO: Lançar exceção
@@ -119,6 +124,7 @@ final readonly class ExecutarAcao
                     }
 
                     if ($intervalo->invert < 1) {
+                        
                         $info['data'] = array(
                             'time' => 'Analisando',
                             'INT_FASE_ITEM' => $intFaseItem,
@@ -135,6 +141,7 @@ final readonly class ExecutarAcao
                         );
 
                         $newResult = $this->getProcessoItemIniciadoCollection($intFaseItem);
+                        
                         if ($newResult->first()->DH_CALC_FIM == $result->first()->DH_CALC_FIM) {
                             if ($this->loopFase($newResult->first()->INT_FASE_TP, $result->first()->INT_PROC, $result->first()->STR_LOTE_ITEM_LICI, $intFaseItem)) {
                                 $this->registrarItemRecusado($intFaseItem, $newResult->first()->INT_FASE_TP, $result->first()->INT_PROC, $result->first()->STR_LOTE_ITEM_LICI);
@@ -154,7 +161,9 @@ final readonly class ExecutarAcao
 
                             $this->registrarFimItemFase($intFaseItem, $result->first()->INT_PROC, $result->first()->STR_LOTE_ITEM_LICI, $newResult->first()->INT_FASE_TP, $lgDisa, $lgCloseSocket);
                             $verificar = false;
-                        } else {
+                        } 
+
+                    }else{
                             $time = base64_encode($intervalo->format('%H:%I:%S'));
 
                             if (($result->first()->INT_FASE_TP != '11') && ($intervalo->format('%i') < 2)) {                                                                //controle de pisca
@@ -168,6 +177,7 @@ final readonly class ExecutarAcao
                             }
 
                             $info['data'] = array(
+                                'id'  => $result->first()->INT_PROC,
                                 'time' => $time,
                                 'INT_FASE_ITEM' => $intFaseItem,
                                 'STR_LOTE_ITEM_LICI' => $result->first()->STR_LOTE_ITEM_LICI,
@@ -178,8 +188,9 @@ final readonly class ExecutarAcao
                             );
                             $info['tipo'] = 'timer';
 
+                             //$acaoDTO = new AcaoDTO($args);
+                             //AcaoExecutadaEvent::dispatch($acaoDTO);
                             //TODO: informarAcaoPeloServidor('acao', $result->first->INT_PROC, $info);
-                        }
                     }
                     sleep(1);
                 }
@@ -225,7 +236,7 @@ final readonly class ExecutarAcao
     protected function isPregoeiroAtivo(ProcessoItemIniciado $processoItemIniciado): bool
     {
         // TODO: Implementar essa função
-        return true;
+        return false;
     }
 
     protected function verificarCancelamentoEmAberto($intProc, $IntFaseItem, $strLoteItemLici): void

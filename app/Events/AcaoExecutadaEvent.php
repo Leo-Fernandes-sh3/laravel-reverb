@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use App\Dtos\AcaoDTO;
+
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
@@ -28,8 +29,11 @@ class AcaoExecutadaEvent implements ShouldBroadcastNow
      */
     public function broadcastOn(): array
     {
+
+        $id = $this->acaoDTO->id;
+
         return [
-            new Channel("acao-executada.{$this->acaoDTO->id}"),
+            new Channel("acao-executada.{$id}"),
         ];
     }
 

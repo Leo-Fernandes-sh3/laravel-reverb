@@ -14,7 +14,7 @@ class AcaoDTO
      */
     public function __construct(array $args)
     {
-        $this->id = $args['id'] ?? '';
+        $this->id   = $args['id'] ?? '';
         $this->acao = $args['acao'] ?? '';
         $this->tipo = $args['tipo'] ?? '';
         $this->data = $args['data'] ?? '';

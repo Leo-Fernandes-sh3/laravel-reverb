@@ -16,11 +16,12 @@ final readonly class ExecutarAcao
     /** @param array{} $args */
     public function __invoke(null $_, array $args): bool
     {
-        $intFaseItem = 208; // Dado somente teste
+      
         $tipo = $args['tipo'];
         $verificar = true;
 
         if ($tipo === 'monitor') {
+            
             MonitorJob::dispatch($args);
             return true;
 
@@ -200,6 +201,7 @@ final readonly class ExecutarAcao
                 }
             }
         } else {
+            
             $acaoDTO = new AcaoDTO($args);
             AcaoExecutadaEvent::dispatch($acaoDTO);
         }

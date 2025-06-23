@@ -3,6 +3,7 @@
 namespace App\GraphQL\Mutations;
 use App\Dtos\AcaoDTO;
 use App\Events\AcaoExecutadaEvent;
+use App\Events\MonitorQueueEvent;
 use App\Models\ProcessoItemIniciado;
 use DateInterval;
 use DateTime;
@@ -12,14 +13,16 @@ use Illuminate\Database\Eloquent\Collection;
 final readonly class ExecutarAcao
 {
     /** @param array{} $args */
-    public function __invoke(null $_, array $args): void
+    public function __invoke(null $_, array $args): bool
     {
         $intFaseItem = 208; // Dado somente teste
         $tipo = $args['tipo'];
         $verificar = true;
 
         if ($tipo === 'monitor') {
-            
+            MonitorQueueEvent::dispatch($args);
+            return true;
+
             $data = \json_decode($args['data']);
 
             $intFaseItem = (int) $data->INT_FASE_ITEM;
@@ -41,7 +44,7 @@ final readonly class ExecutarAcao
                     //                $suspensaoGeral = false;
 
                 if ($result->first()->LG_SUSP === 'S' || $this->isPregoeiroAtivo($result->first())) {
-                    
+
                     if ($result->first()->DH_SUSP === '') {
 
                         //TODO: atualizar campo DH_SUSP de Processo Item Iniciado com ID $intFaseItem
@@ -124,7 +127,7 @@ final readonly class ExecutarAcao
                     }
 
                     if ($intervalo->invert < 1) {
-                        
+
                         $info['data'] = array(
                             'time' => 'Analisando',
                             'INT_FASE_ITEM' => $intFaseItem,
@@ -141,7 +144,7 @@ final readonly class ExecutarAcao
                         );
 
                         $newResult = $this->getProcessoItemIniciadoCollection($intFaseItem);
-                        
+
                         if ($newResult->first()->DH_CALC_FIM == $result->first()->DH_CALC_FIM) {
                             if ($this->loopFase($newResult->first()->INT_FASE_TP, $result->first()->INT_PROC, $result->first()->STR_LOTE_ITEM_LICI, $intFaseItem)) {
                                 $this->registrarItemRecusado($intFaseItem, $newResult->first()->INT_FASE_TP, $result->first()->INT_PROC, $result->first()->STR_LOTE_ITEM_LICI);
@@ -161,7 +164,7 @@ final readonly class ExecutarAcao
 
                             $this->registrarFimItemFase($intFaseItem, $result->first()->INT_PROC, $result->first()->STR_LOTE_ITEM_LICI, $newResult->first()->INT_FASE_TP, $lgDisa, $lgCloseSocket);
                             $verificar = false;
-                        } 
+                        }
 
                     }else{
                             $time = base64_encode($intervalo->format('%H:%I:%S'));

@@ -19,7 +19,7 @@ class MonitorQueueEvent implements ShouldBroadcast
      */
     public function __construct(public array $args)
     {
-        //
+        $teste = $args[0];
     }
 
     /**
@@ -41,6 +41,8 @@ class MonitorQueueEvent implements ShouldBroadcast
 
     public  function broadcastWith(): array
     {
+
+
         return [$this->args['id'] => $this->args];
     }
 }

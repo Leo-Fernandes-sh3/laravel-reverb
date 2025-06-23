@@ -4,6 +4,7 @@ namespace App\GraphQL\Mutations;
 use App\Dtos\AcaoDTO;
 use App\Events\AcaoExecutadaEvent;
 use App\Events\MonitorQueueEvent;
+use App\Jobs\MonitorJob;
 use App\Models\ProcessoItemIniciado;
 use DateInterval;
 use DateTime;
@@ -20,7 +21,7 @@ final readonly class ExecutarAcao
         $verificar = true;
 
         if ($tipo === 'monitor') {
-            MonitorQueueEvent::dispatch($args);
+            MonitorJob::dispatch($args);
             return true;
 
             $data = \json_decode($args['data']);

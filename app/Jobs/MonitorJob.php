@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Dtos\AcaoDTO;
 use App\Events\AcaoExecutadaEvent;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -36,11 +37,18 @@ class MonitorJob implements ShouldQueue
                 'MN_LC' => '0',
                 'LG_PISC' => 'N',
                 'LG_DISA' => 'N',
-                'LG_RAND' => 'n'
+                'LG_RAND' => 'N'
             );
             $info['tipo'] = 'timer';
 
-            AcaoExecutadaEvent::dispatch($info);
+            $acaoDTO = new AcaoDTO([
+                'id' => $this->args['id'],
+                'acao' => '',
+                'tipo' => 'timer',
+                'data' => $info['data']
+            ]);
+
+            AcaoExecutadaEvent::dispatch($acaoDTO);
 
             sleep(1);
         }

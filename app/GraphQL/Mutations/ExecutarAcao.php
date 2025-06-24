@@ -11,8 +11,21 @@ final readonly class ExecutarAcao
     public function __invoke(null $_, array $args): bool
     {
         $tipo = $args['tipo'];
+
+        
         if ($tipo === 'monitor') {
-            MonitorJob::dispatch($args);
+
+            $data      = \json_decode($args['data'],true);
+            $queueName = 'monitor'.$args['id'].'_'.$data['INT_FASE_ITEM'];
+
+            $artisanPath = base_path('artisan');
+            $comando     = "php $artisanPath queue:work --queue={$queueName} --sleep=1 --tries=0 --max-jobs=1 ";
+
+            // Executa de forma assíncrona
+            $pid = exec($comando . ' > /dev/null 2>&1 & echo $!');
+
+            MonitorJob::dispatch($args)->onQueue($queueName);
+
         } else {
             $acaoDTO = new AcaoDTO($args);
             AcaoExecutadaEvent::dispatch($acaoDTO);

@@ -4,6 +4,8 @@ namespace App\Jobs;
 
 use App\Dtos\AcaoDTO;
 use App\Events\AcaoExecutadaEvent;
+use App\Models\Parametros;
+use App\Models\Processo;
 use App\Models\ProcessoItemIniciado;
 use DateInterval;
 use DateTime;
@@ -16,7 +18,8 @@ class MonitorJob implements ShouldQueue
 {
     use Queueable;
     public $timeout = 0;
-
+    
+    
     /**
      * Create a new job instance.
      */
@@ -30,21 +33,18 @@ class MonitorJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $data = \json_decode($this->args['data']);
+        $data        = \json_decode($this->args['data']);
         $intFaseItem = (int) $data->INT_FASE_ITEM;
-        $verificar = true;
+        $verificar   = true;
+        
         while ($verificar) {
+
             $result = $this->getProcessoItemIniciadoCollection($intFaseItem);
 
-            if ($result->isEmpty()) {
+            if ($result->isEmpty() || $result->first()->DH_FIM != null) {
                 $verificar = false;
                 continue;
-            } else {
-                if ( $result->first()->DH_FIM != null ) {
-                    $verificar = false;
-                    continue;
-                }
-            }
+            } 
 
             $lgRand = 'N';
 //            $suspensaoGeral = false;
@@ -84,7 +84,9 @@ class MonitorJob implements ShouldQueue
                     $verificar = false;
                 }
             } elseif ($result->first()->LG_SUSP !== 'S') {
+
                 $mnLicitante = 0;
+                
                 if ($result->first()->DH_SUSP !== null) {
                     $diferenca = '00:00:00';
                     try {
@@ -132,13 +134,14 @@ class MonitorJob implements ShouldQueue
                 }
 
                 if ($intervalo->invert < 1) {
-
+                   
                     $info['data'] = array(
                         'time' => 'Analisando',
                         'INT_FASE_ITEM' => $intFaseItem,
                         'STR_LOTE_ITEM_LICI' => $result->first()->STR_LOTE_ITEM_LICI,
                         'LG_DISA' => 'S'
                     );
+                    
                     $info['tipo'] = 'login';
 
                     //TODO: informarAcaoPeloServidor('acao', $result->first()->INT_PROC, $info);
@@ -170,6 +173,7 @@ class MonitorJob implements ShouldQueue
                         $this->registrarFimItemFase($intFaseItem, $result->first()->INT_PROC, $result->first()->STR_LOTE_ITEM_LICI, $newResult->first()->INT_FASE_TP, $lgDisa, $lgCloseSocket);
                         $verificar = false;
                     }
+                
                 } else {
                     $time = base64_encode($intervalo->format('%H:%I:%S'));
 
@@ -207,6 +211,9 @@ class MonitorJob implements ShouldQueue
                 sleep(1);
             }
         }
+
+        return;
+
     }
 
     /**
@@ -242,9 +249,65 @@ class MonitorJob implements ShouldQueue
     }
 
     protected function isPregoeiroAtivo(ProcessoItemIniciado $processoItemIniciado): bool
-    {
-        // TODO: Implementar essa função
+    {   
         return false;
+        $parametros = Parametros::where('CNPF_PREF','=',$processoItemIniciado->CNPJ_PREF)->first();
+
+        $tempoSuspensao = $parametros->INT_TMP_SUSP;
+        
+        $formatador = 'PT'.$tempoSuspensao.'M';               
+        
+        $DataAtividade =  ($processoItemIniciado->DH_PREG_ATV != '') ? $processoItemIniciado->DH_PREG_ATV : $processoItemIniciado->D_INI_DPT_PRG_E.' '.$processoItemIniciado->H_INI_DPT_PRG_E;
+        
+        $date = new \DateTime($DataAtividade);
+        $date->add(new \DateInterval($formatador));
+
+        $DATA = new \DateTime('now');
+
+        $diff = $date->getTimestamp() - $DATA->getTimestamp();
+        
+        if ($diff <= 0){
+
+            $infoChat['LG_COMENT'] = 'N';
+            $infoChat['INT_PROC'] = $processoItemIniciado->INT_PROC;  
+            $this->bloquearChat($processoItemIniciado->INT_PROC, $infoChat);
+
+            $dados['INT_PROC']  = $processoItemIniciado->INT_PROC;
+            $dados['LG_SUSP']   = 'S';
+            
+            $processo = Processo::find($processoItemIniciado->INT_PROC);
+            $processo->LG_SUSP = 'S';
+
+            $processo->update();
+
+            // if($MSG = $this->mensagens->renderizarMensagemSuspensao($processoItemIniciado->INT_PROC)){
+            //        $this->enviarMensagemPeloServidor('comentarios',$dados['INT_PROC'],$MSG);
+            // }
+
+            return false;
+
+        }else{
+            
+            return true;
+        }
+    }
+
+    protected function bloquearChat(Int $intProc, array $infoChat): bool
+    {
+        $processo = Processo::find($intProc);
+        $processo->LG_COMENT = 'S';
+
+        if($processo->update()){
+
+            // $MSG = $this->mensagens->renderizarMensagemBatePapo($INT_COMENT, $info['LG_COMENT']);
+            // $this->enviarMensagemPeloServidor('comentarios', $INT_COMENT, $MSG);
+             $saida['sucesso'] = true;
+
+        }else{
+            $saida['sucesso'] = false;
+        }
+
+        return  $saida['sucesso'];
     }
 
     protected function verificarCancelamentoEmAberto($intProc, $IntFaseItem, $strLoteItemLici): void

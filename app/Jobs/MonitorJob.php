@@ -15,6 +15,7 @@ use Illuminate\Foundation\Queue\Queueable;
 class MonitorJob implements ShouldQueue
 {
     use Queueable;
+    public $timeout = 0;
 
     /**
      * Create a new job instance.
@@ -197,7 +198,7 @@ class MonitorJob implements ShouldQueue
                         'id' => $this->args['id'],
                         'acao' => '',
                         'tipo' => 'timer',
-                        'data' => json_encode($info['data'])
+                        'data' => json_encode($info)
                     ]);
 
                     AcaoExecutadaEvent::dispatch($acaoDTO);

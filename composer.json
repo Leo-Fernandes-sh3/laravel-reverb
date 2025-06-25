@@ -13,7 +13,9 @@
         "laravel/framework": "^12.0",
         "laravel/reverb": "^1.0",
         "laravel/tinker": "^2.10.1",
-        "nuwave/lighthouse": "^6.58"
+        "nuwave/lighthouse": "^6.58",
+        "slim/slim": "^3.0",
+        "sh3/bibliotecas" : "1.0.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -36,6 +38,12 @@
             "Tests\\": "tests/"
         }
     },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "/home/desenv_web/desenv/bibliotecas"
+        }
+    ],
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",

@@ -9,7 +9,7 @@ class MensagemChatDTO
     public string $id;
     public string $tipo;
     public string $idComentario;
-
+    public string $idTipoConta;
     /**
      * Construtor que inicializa o DTO a partir de um array associativo de argumentos.
      *
@@ -25,5 +25,6 @@ class MensagemChatDTO
         $this->id = isset($args['id']) ? (int) $args['id'] : '0';
         $this->tipo = $args['tipo'] ?? '';
         $this->idComentario = isset($args['idComentario']) ? (int) $args['idComentario'] : '0';
+        $this->idTipoConta  = isset($args['idTipoConta']) ? (int) $args['idTipoConta']   : '0';
     }
 }

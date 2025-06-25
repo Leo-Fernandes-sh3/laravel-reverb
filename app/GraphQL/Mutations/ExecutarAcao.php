@@ -1,9 +1,10 @@
 <?php declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
+
 use App\Dtos\AcaoDTO;
 use App\Events\AcaoExecutadaEvent;
-use App\Jobs\MonitorJob;
+use App\Jobs\MonitoramentoJob;
 
 final readonly class ExecutarAcao
 {
@@ -12,20 +13,29 @@ final readonly class ExecutarAcao
     {
         $tipo = $args['tipo'];
 
-        
         if ($tipo === 'monitor') {
+            $intProc = (int) ($args['id'] ?? 0);
 
-            $data      = \json_decode($args['data'],true);
-            $queueName = 'monitor'.$args['id'].'_'.$data['INT_FASE_ITEM'];
+            if ($intProc === 0) {
+                return false;
+            }
 
-            $artisanPath = base_path('artisan');
-            $comando     = "php $artisanPath queue:work --queue={$queueName} --sleep=1 --tries=0 --max-jobs=1 ";
+            // Defina o número total de filas de monitoramento que você configurará no Horizon
+            $numberOfMonitorQueues = 5;
 
-            // Executa de forma assíncrona
-            $pid = exec($comando . ' > /dev/null 2>&1 & echo $!');
+            // Calcula o índice da fila baseado no INT_PROC
+            $queueIndex = $intProc % $numberOfMonitorQueues;
 
-            MonitorJob::dispatch($args)->onQueue($queueName);
+            // Define o nome da fila
+//            $targetQueue = "monitor-" . $queueIndex;
+            $targetQueue = "monitor";
 
+            // Despacha o job para a fila específica
+            // Se o job precisar do nome da fila para o re-dispatch, passe nos $args
+            $args['monitor_queue_name'] = $targetQueue;
+            $args['number_of_monitor_queues'] = $numberOfMonitorQueues; // Para que o job possa re-calcular
+
+            MonitoramentoJob::dispatch($args)->onQueue($targetQueue);
         } else {
             $acaoDTO = new AcaoDTO($args);
             AcaoExecutadaEvent::dispatch($acaoDTO);

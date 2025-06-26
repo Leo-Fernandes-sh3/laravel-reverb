@@ -123,12 +123,13 @@ class MonitoramentoJob implements ShouldQueue
                 }
             }
 
+            $intervalo = new DateInterval('PT0S');
             try {
                 $nowDateTime = new DateTime('now');
                 $dataCalculoFim = new DateTime($result->first()->DH_CALC_FIM);
                 $intervalo = $dataCalculoFim->diff($nowDateTime);
             } catch (Exception $e) {
-                $intervalo = new DateInterval('PT0S');
+                // TODO: Lançar exceção
             }
 
             if ($intervalo->invert < 1) {
@@ -257,7 +258,7 @@ class MonitoramentoJob implements ShouldQueue
         return false;
     }
 
-    protected function verificarCancelamentoEmAberto($intProc, $IntFaseItem, $strLoteItemLici): void
+    protected function verificarCancelamentoEmAberto($intProc, $intFaseItem, $strLoteItemLici): void
     {
         // TODO: Implementar essa função
     }

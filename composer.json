@@ -15,7 +15,8 @@
         "laravel/tinker": "^2.10.1",
         "nuwave/lighthouse": "^6.58",
         "slim/slim": "^3.0",
-        "sh3/bibliotecas" : "1.0.0"
+        "sh3/bibliotecas" : "1.0.0",
+        "ext-pdo": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

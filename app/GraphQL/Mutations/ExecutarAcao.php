@@ -12,7 +12,7 @@ final readonly class ExecutarAcao
     {
         $tipo = $args['tipo'];
 
-        
+
         if ($tipo === 'monitor') {
 
             $data      = \json_decode($args['data'],true);
@@ -22,8 +22,7 @@ final readonly class ExecutarAcao
             $comando     = "php $artisanPath queue:work --queue={$queueName} --sleep=1 --tries=0 --max-jobs=1 ";
 
             // Executa de forma assíncrona
-            $pid = exec($comando . ' > /dev/null 2>&1 & echo $!');
-
+            exec($comando . ' > /dev/null 2>&1 & echo $!');
             MonitorJob::dispatch($args)->onQueue($queueName);
 
         } else {

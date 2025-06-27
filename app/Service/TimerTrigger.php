@@ -97,7 +97,7 @@ class TimerTrigger
         $this->Monitor = new Monitor($this->commonSlim);
 
         $this->commonSlim->setSocketPort(env('SOCKET_PORT', '80'));
-        $this->commonSlim->setSocketURL(env('SOCKET_URL', 'http://localhost:8000/graphql'));
+        $this->commonSlim->setSocketURL(env('SOCKET_URL', 'http://reverb/graphql'));
         $this->commonSlim->setCONTA($this->params['INT_CTA']);
         $this->commonSlim->setUSUARIO($this->params['INT_USU']);
     }

@@ -16,14 +16,22 @@ final readonly class ExecutarAcao
         if ($tipo === 'monitor') {
 
             $data      = \json_decode($args['data'],true);
-            $queueName = 'monitor'.$args['id'].'_'.$data['INT_FASE_ITEM'];
 
-            $artisanPath = base_path('artisan');
-            $comando     = "php $artisanPath queue:work --queue={$queueName} --sleep=1 --tries=0 --max-jobs=1 ";
+            $INT_FASE_ITEM = $data['INT_FASE_ITEM'];
+            $INT_CTA       = $data['INT_CTA'];
+            $CNPJ_PREF     = $data['CNPJ_PREF'];
+            $INT_CTA       = $data['INT_CTA'];
+            $INT_USU       = $data['INT_USU'];
+            $LG_EMPATE     = $data['LG_EMPATE'];
+            $LG_REIN_ITEM  = $data['LG_REIN_ITEM'];
 
-            // Executa de forma assíncrona
-            exec($comando . ' > /dev/null 2>&1 & echo $!');
-            MonitorJob::dispatch($args)->onQueue($queueName);
+            $Path = '/home/desenv_web/desenv/laravel-reverb/app/Service';
+            
+            //$C = "nohup php /var/www/html/TimerTrigger.php $INT_FASE_ITEM $CNPJ_PREF $INT_CTA $INT_USU $LG_EMPATE $LG_REIN_ITEM  > /dev/null & echo \$!";	
+            $C = "nohup php  $Path/TimerTrigger.php $INT_FASE_ITEM $CNPJ_PREF $INT_CTA $INT_USU $LG_EMPATE $LG_REIN_ITEM  > /dev/null & echo \$!";	
+            $teste = shell_exec($C);		
+
+            //MonitorJob::dispatch($args);
 
         } else {
             $acaoDTO = new AcaoDTO($args);

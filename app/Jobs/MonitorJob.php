@@ -41,18 +41,7 @@ class MonitorJob implements ShouldQueue
 
     public function carregarBibliotecaSh3($data): void
     {
-        $config = [
-            'settings' => [
-                'displayErrorDetails' => true,
-                'db' => [
-                    'host' => env('DB_HOST', '127.0.0.1'),
-                    'user' => env('DB_USERNAME', 'root'),
-                    'pass' => env('DB_PASSWORD', ''),
-                    'dbname' => env('DB_DATABASE', 'laravel')
-                ]
-            ],
-        ];
-
+        $config = $this->getDataBaseConfig();
         $appSlim = new App($config);
         $container = $appSlim->getContainer();
 
@@ -70,9 +59,28 @@ class MonitorJob implements ShouldQueue
         $this->commonSlim = new Common($this->utilSlim);
         $this->monitorSlim = new Monitor($this->commonSlim);
 
-        $this->commonSlim->setSocketPort(env('SOCKET_PORT', '80'));
-        $this->commonSlim->setSocketURL(env('SOCKET_URL', 'http://localhost:8000/graphql'));
+        $this->commonSlim->setSocketPort(config('reverb.servers.reverb.port', '80'));
+        $this->commonSlim->setSocketURL(config('reverb.servers.reverb.host', '0.0.0.0'));
         $this->commonSlim->setCONTA($data->INT_CTA);
         $this->commonSlim->setUSUARIO($data->INT_USU);
+    }
+
+    /**
+     * Obtém as configurações de banco de dados definidas no arquivo de configuração.
+     * @return array[]
+     */
+    protected function getDataBaseConfig(): array
+    {
+        return [
+            'settings' => [
+                'displayErrorDetails' => true,
+                'db' => [
+                    'host' => config('database.connections.mariadb.host', '127.0.0.1'),
+                    'user' => config('database.connections.mariadb.username', 'root'),
+                    'pass' => config('database.connections.mariadb.password', ''),
+                    'dbname' => config('database.connections.mariadb.database', 'laravel')
+                ]
+            ],
+        ];
     }
 }

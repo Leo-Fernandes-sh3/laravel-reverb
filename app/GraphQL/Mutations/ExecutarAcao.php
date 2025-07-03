@@ -4,6 +4,8 @@ namespace App\GraphQL\Mutations;
 use App\Dtos\AcaoDTO;
 use App\Events\AcaoExecutadaEvent;
 use App\Jobs\MonitorJob;
+use Illuminate\Support\Facades\Log;
+
 
 final readonly class ExecutarAcao
 {
@@ -12,6 +14,7 @@ final readonly class ExecutarAcao
     {
         $tipo = $args['tipo'];
 
+        Log::debug('Valor da variável:', ['tipo' => $tipo]);
 
         if ($tipo === 'monitor') {
 
@@ -30,7 +33,9 @@ final readonly class ExecutarAcao
             $Path = $artisanPath. '/app/Service';
             
             //$C = "nohup php /var/www/html/TimerTrigger.php $INT_FASE_ITEM $CNPJ_PREF $INT_CTA $INT_USU $LG_EMPATE $LG_REIN_ITEM  > /dev/null & echo \$!";	
-            $C = "nohup php  $Path/TimerTrigger.php $INT_FASE_ITEM $CNPJ_PREF $INT_CTA $INT_USU $LG_EMPATE $LG_REIN_ITEM $artisanPath > /dev/null & echo \$!";	
+            $C = "nohup php  $Path/TimerTrigger.php $INT_FASE_ITEM $CNPJ_PREF $INT_CTA $INT_USU $LG_EMPATE $LG_REIN_ITEM $artisanPath > /dev/null & echo \$!";
+            
+            Log::debug('Valor da variável:', ['nohup' => $C]);
             $teste = shell_exec($C);		
 
             //MonitorJob::dispatch($args);

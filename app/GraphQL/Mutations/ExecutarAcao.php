@@ -25,10 +25,12 @@ final readonly class ExecutarAcao
             $LG_EMPATE     = $data['LG_EMPATE'];
             $LG_REIN_ITEM  = $data['LG_REIN_ITEM'];
 
-            $Path = '/home/desenv_web/desenv/laravel-reverb/app/Service';
+            $artisanPath = base_path();
+
+            $Path = $artisanPath. '/app/Service';
             
             //$C = "nohup php /var/www/html/TimerTrigger.php $INT_FASE_ITEM $CNPJ_PREF $INT_CTA $INT_USU $LG_EMPATE $LG_REIN_ITEM  > /dev/null & echo \$!";	
-            $C = "nohup php  $Path/TimerTrigger.php $INT_FASE_ITEM $CNPJ_PREF $INT_CTA $INT_USU $LG_EMPATE $LG_REIN_ITEM  > /dev/null & echo \$!";	
+            $C = "nohup php  $Path/TimerTrigger.php $INT_FASE_ITEM $CNPJ_PREF $INT_CTA $INT_USU $LG_EMPATE $LG_REIN_ITEM $artisanPath > /dev/null & echo \$!";	
             $teste = shell_exec($C);		
 
             //MonitorJob::dispatch($args);

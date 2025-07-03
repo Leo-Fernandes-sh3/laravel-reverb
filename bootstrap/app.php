@@ -16,7 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'csrf' => \App\Http\Middleware\VerifyCsrfToken::class,
         ]);
-
+        
         // Adiciona o middleware csrf no grupo web
         $middleware->appendToGroup('web', 'csrf');
     })

@@ -3,7 +3,7 @@ namespace App\Service;
 
 date_default_timezone_set('America/Sao_Paulo'); //importante nao apagar
 
-require '/home/desenv_web/desenv/laravel-reverb/vendor/autoload.php';
+require $argv[7].'/vendor/autoload.php';
 
 use PDO;
 use Sh3\Bibliotecas\Util\Util;
@@ -27,7 +27,7 @@ class TimerTrigger
         $this->params['INT_USU ']      = $argv[4];    
         $this->params['LG_EMPATE ']    = $argv[5];
         $this->params['LG_REIN_ITEM']  = $argv[6];
-        //$this->params['PATH']          = $argv[7];
+        $this->params['PATH']          = $argv[7];
     }
 
     public function run(){
@@ -96,15 +96,18 @@ class TimerTrigger
         $this->commonSlim = new Common($this->utilSlim);
         $this->Monitor = new Monitor($this->commonSlim);
 
-        $this->commonSlim->setSocketPort(env('SOCKET_PORT', '80'));
-        $this->commonSlim->setSocketURL(env('SOCKET_URL', 'http://localhost:8000/graphql'));
+        $STR_SERV = $this->utilSlim->getServidor($this->params['CNPJ_PREF']);
+
+        $_SERVER["SERVER_NAME"] = $STR_SERV;
+
+        $serverInfo = $this->commonSlim->obterDadosServidorSocket(true);
+
+        $this->commonSlim->setSocketPort($serverInfo->SOCKETPORT);
+        $this->commonSlim->setSocketURL( $serverInfo->SOCKETURL);
         $this->commonSlim->setCONTA($this->params['INT_CTA']);
         $this->commonSlim->setUSUARIO($this->params['INT_USU']);
     }
 }
-
-$dotenv = \Dotenv\Dotenv::createImmutable('/home/desenv_web/desenv/laravel-reverb');
-$dotenv->load();
 
 $timerTrigger = new TimerTrigger($argv);
 $timerTrigger->run();

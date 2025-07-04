@@ -53,7 +53,7 @@ class TimerTrigger
           $this->Monitor->setReinicioItem($this->params['LG_REIN_ITEM']);
           //Monitor->stdclass->LG_EMPATE = $LG_EMPATE;
           
-          $app = require_once '/home/desenv_web/desenv/laravel-reverb/bootstrap/app.php';
+          $app = require_once $this->params['PATH'] .'/bootstrap/app.php';
           $app->make(\Illuminate\Contracts\Console\Kernel::class)->bootstrap();
 
           \Illuminate\Support\Facades\Facade::setFacadeApplication($app);

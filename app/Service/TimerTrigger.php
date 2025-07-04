@@ -3,7 +3,15 @@ namespace App\Service;
 
 date_default_timezone_set('America/Sao_Paulo'); //importante nao apagar
 
+$texto = 'timer triiger path '.$argv[7]. PHP_EOL; //quebra de linha
+
+\file_put_contents($argv[7].'/public/Saida.txt',$texto,FILE_APPEND);
+
 require $argv[7].'/vendor/autoload.php';
+
+$texto = 'required ok '. PHP_EOL; //quebra de linha
+
+\file_put_contents($argv[7].'/public/Saida.txt',$texto,FILE_APPEND);
 
 use PDO;
 use Sh3\Bibliotecas\Util\Util;
@@ -97,6 +105,10 @@ class TimerTrigger
         $this->Monitor = new Monitor($this->commonSlim);
 
         $STR_SERV = $this->utilSlim->getServidor($this->params['CNPJ_PREF']);
+
+        $texto = 'server  '.$STR_SERV. PHP_EOL; //quebra de linha
+
+        \file_put_contents($this->params['PATH'].'/public/Saida.txt',$texto,FILE_APPEND);
 
         $_SERVER["SERVER_NAME"] = $STR_SERV;
 

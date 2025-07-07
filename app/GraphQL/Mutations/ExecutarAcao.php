@@ -25,14 +25,10 @@ final readonly class ExecutarAcao
             $CNPJ_PREF     = $data['CNPJ_PREF'];
             $INT_CTA       = $data['INT_CTA'];
             $INT_USU       = $data['INT_USU'];
-            $LG_EMPATE     = $data['LG_EMPATE'];
-            $LG_REIN_ITEM  = $data['LG_REIN_ITEM'];
+            $LG_EMPATE     = (isset($data['LG_EMPATE'])) ? $data['LG_EMPATE'] : 'N';
+            $LG_REIN_ITEM  = (isset($data['LG_REIN_ITEM'])) ? $data['LG_REIN_ITEM'] : 'N';
 
             $artisanPath = base_path();
-
-             $texto = 'executando no hohup '. PHP_EOL; //quebra de linha
-
-            \file_put_contents($artisanPath.'/public/Saida.txt',$texto,FILE_APPEND);
 
             $Path = $artisanPath. '/app/Service';
             

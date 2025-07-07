@@ -2,10 +2,6 @@ extend type Mutation {
     executarAcao(
         input: AcaoInput! @spread
     ): Boolean @field(resolver: "App\\GraphQL\\Mutations\\ExecutarAcao")
-
-    # executarAcaoJob(
-    #     input: AcaoInput! @spread
-    # ): Boolean @field(resolver: "App\\GraphQL\\Mutations\\ExecutarAcaoJob")
 }
 
 input AcaoInput {

@@ -40,13 +40,13 @@ class TimerTrigger
 
           // Definindo a closure
 
-          $intFaseItem = $argv[1];    
+          $intFaseItem  = $argv[1];    
           $cnpjPref     = $argv[2];    
           $intCta       = $argv[3];    
           $intUsu       = $argv[4];    
           $lgEmpate     = $argv[5];
-          $lgReinItem  = $argv[6];
-          $path          = $argv[7];
+          $lgReinItem   = $argv[6];
+          $path         = $argv[7];
           
           $this->Monitor->setTipoLogin(3);
           $this->Monitor->setCNPJPREF($cnpjPref);
@@ -93,7 +93,6 @@ class TimerTrigger
 
 
         $cnpjPref = $argv[2]; 
-        $path      = $argv[7];
 
         $appSlim = new App($config);
         $container = $appSlim->getContainer();

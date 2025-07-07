@@ -3,10 +3,6 @@ namespace App\Service;
 
 date_default_timezone_set('America/Sao_Paulo'); //importante nao apagar
 
-$texto = 'timer triiger path '.$argv[7]. PHP_EOL; //quebra de linha
-
-\file_put_contents($argv[7].'/public/Saida.txt',$texto,FILE_APPEND);
-
 require $argv[7].'/vendor/autoload.php';
 
 $texto = 'required ok '. PHP_EOL; //quebra de linha
@@ -29,31 +25,39 @@ class TimerTrigger
 
     public function __construct($argv){
        
-        $this->params['INT_FASE_ITEM'] = $argv[1];    
-        $this->params['CNPJ_PREF']     = $argv[2];    
-        $this->params['INT_CTA']       = $argv[3];    
-        $this->params['INT_USU ']      = $argv[4];    
-        $this->params['LG_EMPATE ']    = $argv[5];
-        $this->params['LG_REIN_ITEM']  = $argv[6];
-        $this->params['PATH']          = $argv[7];
+        // $this->params['intFaseItem'] = $argv[1];    
+        // $this->params['cnpjPref']     = $argv[2];    
+        // $this->params['intCta']       = $argv[3];    
+        // $this->params['intUsu ']      = $argv[4];    
+        // $this->params['lgEmpate ']    = $argv[5];
+        // $this->params['lgReinItem']  = $argv[6];
+        // $this->params['path']          = $argv[7];
     }
 
-    public function run(){
+    public function run($argv){
 
-        $this->carregarBibliotecaSh3();
+        $this->carregarBibliotecaSh3($argv);
 
           // Definindo a closure
+
+          $intFaseItem = $argv[1];    
+          $cnpjPref     = $argv[2];    
+          $intCta       = $argv[3];    
+          $intUsu       = $argv[4];    
+          $lgEmpate     = $argv[5];
+          $lgReinItem  = $argv[6];
+          $path          = $argv[7];
           
           $this->Monitor->setTipoLogin(3);
-          $this->Monitor->setCNPJPREF($this->params['CNPJ_PREF']);
-          $this->Monitor->setCONTA($this->params['INT_CTA']);
-          $this->Monitor->setUSUARIO($this->params['INT_USU']);
-          $this->Monitor->setPath($this->params['path']);
-          $this->Monitor->setEmpate($this->params['LG_EMPATE']);
-          $this->Monitor->setReinicioItem($this->params['LG_REIN_ITEM']);
-          //Monitor->stdclass->LG_EMPATE = $LG_EMPATE;
+          $this->Monitor->setCNPJPREF($cnpjPref);
+          $this->Monitor->setCONTA($intCta);
+          $this->Monitor->setUSUARIO($intUsu);
+          $this->Monitor->setpath($path);
+          $this->Monitor->setEmpate($lgEmpate);
+          $this->Monitor->setReinicioItem($lgReinItem);
+          //Monitor->stdclass->lgEmpate = $lgEmpate;
           
-          $app = require_once $this->params['PATH'] .'/bootstrap/app.php';
+          $app = require_once $path .'/bootstrap/app.php';
           $app->make(\Illuminate\Contracts\Console\Kernel::class)->bootstrap();
 
           \Illuminate\Support\Facades\Facade::setFacadeApplication($app);
@@ -69,11 +73,11 @@ class TimerTrigger
               \Illuminate\Support\Facades\Event::dispatch(new \App\Events\AcaoExecutadaEvent($acaoDTO));
           };
 
-          $this->Monitor->monitorarFase($this->params['INT_FASE_ITEM'],$chamadaLaravel);
+          $this->Monitor->monitorarFase($intFaseItem,$chamadaLaravel);
         }
         
         
-        public function carregarBibliotecaSh3(): void{
+        public function carregarBibliotecaSh3($argv): void{
 
         $config = [
             'settings' => [
@@ -86,6 +90,10 @@ class TimerTrigger
                 ]
             ],
         ];
+
+
+        $cnpjPref = $argv[2]; 
+        $path      = $argv[7];
 
         $appSlim = new App($config);
         $container = $appSlim->getContainer();
@@ -104,11 +112,7 @@ class TimerTrigger
         $this->commonSlim = new Common($this->utilSlim);
         $this->Monitor = new Monitor($this->commonSlim);
 
-        $STR_SERV = $this->utilSlim->getServidor($this->params['CNPJ_PREF']);
-
-        $texto = 'server  '.$STR_SERV. PHP_EOL; //quebra de linha
-
-        \file_put_contents($this->params['PATH'].'/public/Saida.txt',$texto,FILE_APPEND);
+        $STR_SERV = $this->utilSlim->getServidor($cnpjPref);
 
         $_SERVER["SERVER_NAME"] = $STR_SERV;
 
@@ -116,10 +120,10 @@ class TimerTrigger
 
         $this->commonSlim->setSocketPort($serverInfo->SOCKETPORT);
         $this->commonSlim->setSocketURL( $serverInfo->SOCKETURL);
-        $this->commonSlim->setCONTA($this->params['INT_CTA']);
-        $this->commonSlim->setUSUARIO($this->params['INT_USU']);
+      //  $this->commonSlim->setCONTA($this->params['intCta']);
+       // $this->commonSlim->setUSUARIO($this->params['intUsu']);
     }
 }
 
 $timerTrigger = new TimerTrigger($argv);
-$timerTrigger->run();
+$timerTrigger->run($argv);
